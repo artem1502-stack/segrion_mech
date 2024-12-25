@@ -15,9 +15,14 @@ void	swap_double(double *a, double *b);
 void	swap_seg(t_seg *a, t_seg *b);
 void	sort_intervals(t_seg *arr, int n);
 
-t_seg*	read_intervals(int n, FILE *f);
+t_seg*	read_intervals(int *n, FILE *f);
 t_seg*	merge_intervals(t_seg *arr, int *n);
 int		is_in_intervals(t_seg *arr, int n, double a, double b);
 
+
+int		partition(t_seg *arr, int low, int high);
+void	quick_sort_recursion(t_seg *arr, int low, int high);
+void	quick_sort_intervals(t_seg *arr, int len);
+int		is_sorted(t_seg *arr, int start, int end);
 
 #endif

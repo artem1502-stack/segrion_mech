@@ -23,27 +23,73 @@ void print_intervals(t_seg *arr, int n)
 	printf("\n");
 }
 
-t_seg *read_intervals(int n, FILE *f)
+t_seg *read_intervals(int *n, FILE *f)
 {
-	int i;
+	int cur_n, max_n = 10;
 	double a, b;
 	t_seg *arr;
 
-	arr = (t_seg *)malloc(n * sizeof(t_seg));
-	for(i = 0; i < n; ++i)
+	arr = (t_seg *)malloc(max_n * sizeof(t_seg));
+	for(cur_n = 0; fscanf(f, "%lf %lf", &a, &b) == 2; ++cur_n)
 	{
-		if (fscanf(f, "%lf %lf", &a, &b) != 2)
+		if (cur_n >= max_n - 1)
 		{
-			free(arr);
-			printf("Error: incorrect data\n");
-			return NULL;
+			max_n *= 2;
+			arr = (t_seg *)realloc(arr, max_n * sizeof(t_seg));
 		}
 		if (a > b)
 			swap_double(&a, &b);
-		arr[i].a = a;
-		arr[i].b = b;
+		arr[cur_n].a = a;
+		arr[cur_n].b = b;
 	}
+	*n = cur_n;
 	return arr;
+}
+
+int is_sorted(t_seg *arr, int start, int end)
+{
+  int i;
+
+  for (i = start; i < end; i++)
+  {
+    if (arr[i].a > arr[i + 1].a)
+      return 0;
+  }
+  return 1;
+}
+
+int partition(t_seg *arr, int low, int high)
+{
+  double p = arr[low].a;
+  int i = low, j = high;
+
+  while(i < j)
+  {
+    while((arr[i].a <= p) && (i <= high - 1))
+      i++;
+    while((arr[j].a > p) && (j >= low + 1))
+      j--;
+    if (i < j)
+      swap_seg(&arr[i], &arr[j]);
+  }
+  swap_seg(&arr[low], &arr[j]);
+  return j;
+}
+
+void quick_sort_recursion(t_seg *arr, int low, int high)
+{
+  if ((low < high) && (!is_sorted(arr, low, high)))
+  {
+    int x = partition(arr, low, high);
+
+    quick_sort_recursion(arr, low, x - 1);
+    quick_sort_recursion(arr, x + 1, high);
+  }
+}
+
+void quick_sort_intervals(t_seg *arr, int len)
+{  
+  quick_sort_recursion(arr, 0, len - 1);
 }
 
 void sort_intervals(t_seg *arr, int n)
