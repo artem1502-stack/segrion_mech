@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <string.h>
 
 int		**read_darray_many(FILE *f, int *n, int *m);
 int		**read_darray_one(FILE *f, int *n, int *m);
