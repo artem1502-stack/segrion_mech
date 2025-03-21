@@ -148,3 +148,58 @@ int check_max(int **array, int n, int *m)
 	return 1;
 }
 
+int column_const_comparison(int **array, int n, int m, int index, int number)
+{
+	int i;
+
+	if ((index < 0) || (index >= m))
+		return 0;
+
+	for (i = 0; i < n; i++)
+	{
+		if (array[i][index] <= number)
+			return 0;
+	}
+	return 1;
+}
+
+// column index <= column index+1
+int column_column_comparison(int **array, int n, int m, int index)
+{
+	int i;
+
+	if ((index < 0) || (index >= m))
+		return 0;
+	for (i = 0; i < n; i++)
+	{
+		if (array[i][index] > array[i][index + 1])
+			return 0;
+	}
+	return 1;
+}
+
+void filter_columns(int **array, int n, int *m, int number)
+{
+	int i;
+
+	for (i = 0; i < *m; ++i)
+	{
+		if (!column_const_comparison(array, n, *m, i, number))
+		{
+			delete_column(array, n, *m, i);
+			(*m)--;
+			i--;
+		}
+	}
+	for (i = 1; i < *m - 1; ++i)
+	{
+		if (column_column_comparison(array, n, *m, i - 1)\
+			&& column_column_comparison(array, n, *m, i))
+		{
+			delete_column(array, n, *m, i);
+			(*m)--;
+			i--;
+		}
+	}
+}
+
